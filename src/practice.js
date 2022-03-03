@@ -1,5 +1,9 @@
+/* eslint-disable no-new */
+/* eslint-disable no-promise-executor-return */
 /* eslint-disable no-unused-expressions */
-import { getLocaion } from "./geo";
+// import { getLocaion } from "./geo";
+
+const sleep = (x) => new Promise((resolve) => setTimeout(resolve, x));
 
 function Router() {
   let listeners = [];
@@ -22,7 +26,25 @@ function Router() {
     console.log("onLeave", "isMatch(match, previousPath)", isMatch(match, previousPath))
   };
 
-  const handleAllListeners = () => listeners.forEach(handleListener);
+  const handleAllListeners = () => {
+    const promList = listeners.map((el) => el);
+    const chain = () => {
+      const currentToDo = promList.shift();
+      if (currentToDo) {
+        currentToDo()
+          .then(() => {
+            console.log("22");
+            chain();
+          })
+          .catch((e) => console.error(e));
+      }
+    };
+
+    for (let i = 0; i < listeners.length; i++) {
+      chain();
+    }
+  }
+  // listeners.forEach(handleListener)};
 
   const generateId = () => {
     const getRandomNumber = () =>
@@ -70,12 +92,14 @@ function Router() {
 // USAGE
 const createRender = (content) => async (...args) => {
   console.log("3", content);
-  let result = await getLocaion();
+  document.getElementById("root").innerHTML = `Loading...`
+  await sleep(1000);
+  // let result = await getLocaion();
   // console.info(`${content} args=${JSON.stringify(args)}`);
-  document.getElementById("root").innerHTML = `<h2>${JSON.stringify(result)}</h2>`;
+  document.getElementById("root").innerHTML = `<h2>${JSON.stringify(args)}</h2>`;
 };
 
-const createAsincRender = (content) => async (...args) => {
+const createAsincRender = (content) => (...args) => {
   // let result = async () => await getLocaion();
   // let result = await getLocaion();
   document.getElementById(
@@ -96,8 +120,8 @@ const unsubscribe = router.on(/.*/, createAsincRender("/.*"));
 
 router.on(
   (path) => path === "/contacts",
-  createRender("/contacts"), // onEnter
-  createAsincRender("[leaving] /contacts") // onLeave
+  createRender("/contacts") // onEnter
+  // createAsincRender("[leaving] /contacts") // onLeave
 );
 router.on("/about", createAsincRender("/about"), createAsincRender("/about"), createAsincRender("/about"));
 router.on("/about/us", createAsincRender("/about/us"));
@@ -110,5 +134,5 @@ document.body.addEventListener("click", (event) => {
   const url = event.target.getAttribute("href");
   const random = Math.random();
   router.go(url, random);
-  unsubscribe();
+  // unsubscribe();
 });
