@@ -7,7 +7,7 @@ const path = require("path");
 const { NODE_ENV } = process.env;
 
 module.exports = {
-  entry: path.resolve(__dirname, "src/practice.js"),
+  entry: path.resolve(__dirname, "src/router.js"),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",

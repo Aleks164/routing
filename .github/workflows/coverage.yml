@@ -2,7 +2,7 @@ name: "coverage"
 on:
   pull_request:
     branches:
-      - maih
+      - main
 jobs:
   coverage:
     runs-on: ubuntu-latest
