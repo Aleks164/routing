@@ -1,0 +1,14 @@
+.route{
+    box-sizing: border-box;
+    padding: 15px;
+    border: 2px solid;
+    height: 90px;
+    width: 220px;
+    position: absolute;
+    top: 30%;
+    right: 5px;
+    background-color: antiquewhite;
+}
+#root{
+    text-decoration: underline;
+}
