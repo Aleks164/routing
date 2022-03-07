@@ -2,7 +2,7 @@ import { windowHistory } from "./windowHistory";
 import { messageCreator } from "./messageCreator";
 
 export const createAsincRender = (content, sec) => (...args) => {
-  console.log(args);
+  console.log("@@@@@", args, content, sec);
   if (args[0].state) {
     document.getElementById("root").innerHTML = `<h2>Loading state...</h2>`;
   }

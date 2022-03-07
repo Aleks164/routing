@@ -1,26 +1,50 @@
 import { createAsincRender } from "./createAsincRender";
 
-describe("createAsincRender", () => {
+describe.skip("createAsincRender", () => {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  document.body.innerHTML = `
-<article id="root"></article>
-<div id="windowPath"></div>`;
+  const listeners = [];
+  beforeEach(() => {
+    document.body.innerHTML = `
+    <article id="root"></article>
+    <div id="windowPath"></div>`;
+  });
+  afterEach(() => {
+    document.body.innerHTML = ``;
+  })
 
   it("createAsincRender is work", async () => {
-    createAsincRender("you switched to Home ('/')", 1500);
-    let q = [];
-    q.push({ state: 123, currentPath: "/Contacts", previousPath: "/About" });
-    q.forEach((el) => {
-      createAsincRender(el);
-    })
+    // function on(match, onEnter) {
+    //   const listener = { match, onEnter };
+    //   listeners.push(listener);
+    // }
+    // const args = { currentPath: "/Contacts", previousPath: "/About", state: 123 };
 
-    const historyDiv = document.getElementById("windowPath");
+    // async function handleListener({ onEnter }) {
+    //   try {
+    //     await onEnter(args);
+    //   }
+    //   catch (e) {
+    //     console.log(e);
+    //   }
+    // }
 
-    const path = `<h2>currentPath: /Contacts</h2><h2>previousPath: /About</h2>`;
+    // const historyDiv = document.getElementById("windowPath");
 
-    await sleep(1000);
+    // const path = `<h2>currentPath: /Contacts</h2><h2>previousPath: /About</h2>`;
+    const load = `<h2>Loading state...</h2>`;
+
+    // on(
+    //   "/",
+    //   createAsincRender("you switched to Home ('/')", 150) // onEnter
+    // );
+    // console.log(listeners)
+    // handleListener();
+    await createAsincRender("you switched to Home ('/')", 150)
+
+    expect(document.getElementById("root").innerHTML).toBe(load);
+    await sleep(300);
 
     console.log(document.body.innerHTML);
     // expect(historyDiv.innerHTML).toBe(path);
