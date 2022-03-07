@@ -10,7 +10,6 @@ export function Router() {
         (typeof match === "string" && match === path);
 
     const handleListener = async ({ match, onEnter, onLeave, onBeforeEnter }) => {
-        console.log("handleListener", onEnter)
         const args = { currentPath, previousPath, state: history.state };
         if (currentPath !== previousPath && Boolean(onBeforeEnter)) {
             isMatch(match, currentPath) &&
@@ -19,7 +18,6 @@ export function Router() {
                     onLeave && isMatch(match, previousPath) && (await onLeave(args));
                 }));
         } else if (currentPath !== previousPath || args.state === null) {
-            console.log("onEnter", onEnter)
             isMatch(match, currentPath) && (await onEnter(args));
             onLeave && isMatch(match, previousPath) && (await onLeave(args));
         }
@@ -52,7 +50,6 @@ export function Router() {
     };
 
     const on = (match, onEnter, onLeave, onBeforeEnter) => {
-        console.log("onEnterON", onEnter)
         const id = generateId();
         const listener = { id, match, onEnter, onLeave, onBeforeEnter };
         listeners.push(listener);
@@ -76,7 +73,6 @@ export function Router() {
         if (!event.target.matches("a")) {
             return;
         }
-        console.log("click")
         event.preventDefault();
         const url = event.target.getAttribute("href");
         const random = Math.random();

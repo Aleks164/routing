@@ -20,27 +20,48 @@ describe("router", () => {
     const homeEl = el.querySelector("#home");
     const contactsEl = el.querySelector("#contacts");
 
-    const onLeave = jest.fn();
-    const onBeforeEnter = jest.fn();
-    const onEnter = jest.fn();
-
-    beforeAll(() => {
-        onLeave.mockClear();
-        onBeforeEnter.mockClear();
-        onEnter.mockClear();
+    const onLeave = jest.fn().mockImplementation(() => new Promise((resolve) => {
+        setTimeout(() => {
+            console.log("ok")
+            resolve();
+        }, 200)
+    }));
+    const onBeforeEnter = jest.fn().mockImplementation(() => new Promise((resolve) => {
+        setTimeout(() => {
+            console.log("ok")
+            resolve();
+        }, 200)
+    }));
+    const onEnter = jest.fn().mockImplementation(() => new Promise((resolve) => {
+        setTimeout(() => {
+            console.log("ok")
+            resolve();
+        }, 200)
+    }));
+    beforeEach(() => {
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.123);
     });
 
-    // it("should create Router with expected unsubscribe function", () => {
-    //     const router = Router();
-    //     const unsubscribe = router.on({ match: "/" });
-    //     expect(unsubscribe).toBeInstanceOf(Function);
-    // });
+    afterEach(() => {
+        onLeave.mockRestore();
+        onBeforeEnter.mockRestore();
+        onEnter.mockRestore();
+        jest.spyOn(global.Math, 'random').mockRestore();
+    });
+
+    it("should create Router with expected unsubscribe function", () => {
+        const router = Router();
+        const unsubscribe = router.on("/");
+        expect(unsubscribe).toBeInstanceOf(Function);
+    });
 
     it("should unsubscribe expected hook", async () => {
         const router = Router();
-        router.on({ match: "/", onEnter });
+
+        router.on("/", onEnter);
 
         homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
+
         await sleep();
         expect(onEnter).toHaveBeenCalledTimes(1);
 
@@ -61,38 +82,35 @@ describe("router", () => {
     //     expect(onLeave).toHaveBeenCalled();
     // });
 
-    // it("should invoke expected hooks on contacts click", async () => {
-    //     const router = Router();
-    //     router.on({ match: "/", onBeforeEnter, onEnter, onLeave });
-    //     router.on({
-    //         match: (path) => path === "/contacts",
-    //         onBeforeEnter,
-    //         onEnter,
-    //         onLeave,
-    //     });
+    it("should invoke expected hooks on contacts click", async () => {
+        const router = Router();
+        router.on("/", onEnter, onLeave, onBeforeEnter);
+        router.on((path) => path === "/contacts",
+            onEnter, onLeave, onBeforeEnter
+        );
 
-    //     homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
-    //     contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
-    //     await sleep();
+        homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
 
-    //     expect(onBeforeEnter).toHaveBeenCalledTimes(3);
-    //     expect(onEnter).toHaveBeenCalledTimes(3);
-    //     expect(onLeave).toHaveBeenCalledTimes(4);
+        expect(onBeforeEnter).toHaveBeenCalledTimes(2);
+        expect(onEnter).toHaveBeenCalledTimes(2);
+        expect(onLeave).toHaveBeenCalledTimes(2);
 
-    //     expect(onBeforeEnter).lastCalledWith({
-    //         currentPath: "/contacts",
-    //         previousPath: "/",
-    //         state: { url: "/contacts" },
-    //     });
-    //     expect(onEnter).lastCalledWith({
-    //         currentPath: "/contacts",
-    //         previousPath: "/",
-    //         state: { url: "/contacts" },
-    //     });
-    //     expect(onLeave).lastCalledWith({
-    //         currentPath: "/",
-    //         previousPath: "/",
-    //         state: { url: "/" },
-    //     });
-    // });
+        expect(onBeforeEnter).lastCalledWith({
+            currentPath: "/contacts",
+            previousPath: "/",
+            state: 0.123,
+        });
+        expect(onEnter).lastCalledWith({
+            currentPath: "/contacts",
+            previousPath: "/",
+            state: 0.123
+        });
+        expect(onLeave).lastCalledWith({
+            currentPath: "/",
+            previousPath: "/",
+            state: 0.123,
+        });
+    });
 });

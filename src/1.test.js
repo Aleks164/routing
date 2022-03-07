@@ -15,13 +15,13 @@ describe.skip("createAsincRender", () => {
     })
 
     it("createAsincRender is work", async () => {
-        test1("123", 300);
-        let q = { test1 };
-        let w = async ({ test1 }) => {
-            console.log(test1);
-            await test1("qwe");
+        let qq = test1("123", 300);
+        let q = { qq };
+        let w = async ({ qq }) => {
+            console.log(qq);
+            await qq("qwe");
         }
-        w({ test1 });
+        await w({ qq });
         await sleep(400);
         expect(document.getElementById("root").innerHTML).toBe(`<h2>state: 123</h2>`);
     });
