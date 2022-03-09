@@ -1,6 +1,6 @@
 import { Router } from "./router";
 
-const sleep = (ms = 50) =>
+const sleep = (ms = 100) =>
     new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
@@ -19,98 +19,130 @@ describe("router", () => {
 `;
     const homeEl = el.querySelector("#home");
     const contactsEl = el.querySelector("#contacts");
+    const aboutEl = el.querySelector("#about");
 
-    const onLeave = jest.fn().mockImplementation(() => new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("ok")
-            resolve();
-        }, 200)
-    }));
-    const onBeforeEnter = jest.fn().mockImplementation(() => new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("ok")
-            resolve();
-        }, 200)
-    }));
-    const onEnter = jest.fn().mockImplementation(() => new Promise((resolve) => {
-        setTimeout(() => {
-            console.log("ok")
-            resolve();
-        }, 200)
-    }));
+    const onLeave = jest.fn().mockImplementation(
+        () =>
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 0);
+            })
+    );
+    const onBeforeEnter = jest.fn().mockImplementation(
+        () =>
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 0);
+            })
+    );
+    const onEnter = jest.fn().mockImplementation(
+        () =>
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 0);
+            })
+    );
     beforeEach(() => {
-        jest.spyOn(global.Math, 'random').mockReturnValue(0.123);
+        location.hash = "/";
+        jest.spyOn(global.Math, "random").mockReturnValue(0.123);
     });
 
     afterEach(() => {
-        onLeave.mockRestore();
-        onBeforeEnter.mockRestore();
-        onEnter.mockRestore();
-        jest.spyOn(global.Math, 'random').mockRestore();
+        onLeave.mockClear();
+        onBeforeEnter.mockClear();
+        onEnter.mockClear();
+        jest.spyOn(global.Math, "random").mockRestore();
     });
 
-    it("should create Router with expected unsubscribe function", () => {
-        const router = Router();
-        const unsubscribe = router.on("/");
-        expect(unsubscribe).toBeInstanceOf(Function);
-    });
-
-    it("should unsubscribe expected hook", async () => {
-        const router = Router();
-
-        router.on("/", onEnter);
-
-        homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
-
-        await sleep();
-        expect(onEnter).toHaveBeenCalledTimes(1);
-
-        homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
-        await sleep();
-        expect(onEnter).toHaveBeenCalledTimes(1);
-    });
-
-    // it("should invoke expected hooks on home click with hashApi", async () => {
-    //     const router = new Router({ hashApiEnabled: true });
-    //     router.on({ match: "/", onBeforeEnter, onEnter, onLeave });
-
-    //     homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
-    //     await sleep();
-
-    //     expect(onBeforeEnter).toHaveBeenCalled();
-    //     expect(onEnter).toHaveBeenCalled();
-    //     expect(onLeave).toHaveBeenCalled();
+    // it("routerOn is a function", () => {
+    //     const router = Router();
+    //     const routerOn = router.on("/");
+    //     expect(routerOn).toBeInstanceOf(Function);
     // });
 
-    it("should invoke expected hooks on contacts click", async () => {
+    it("should invoke expected hooks on contacts click with onEnter", async () => {
         const router = Router();
-        router.on("/", onEnter, onLeave, onBeforeEnter);
-        router.on((path) => path === "/contacts",
-            onEnter, onLeave, onBeforeEnter
-        );
 
-        homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        router.on((path) => path === "/contacts", onEnter);
+
+        await sleep(100);
+
         contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
         await sleep();
-
-        expect(onBeforeEnter).toHaveBeenCalledTimes(2);
-        expect(onEnter).toHaveBeenCalledTimes(2);
-        expect(onLeave).toHaveBeenCalledTimes(2);
-
-        expect(onBeforeEnter).lastCalledWith({
-            currentPath: "/contacts",
-            previousPath: "/",
-            state: 0.123,
-        });
         expect(onEnter).lastCalledWith({
             currentPath: "/contacts",
             previousPath: "/",
             state: 0.123
         });
+    });
+
+    it("should invoke expected hooks on home click with hashApi", async () => {
+        const router = Router({ apiHashOn: true });
+        router.on((path) => path === "/contacts", onEnter, onLeave);
+        router.on(/\/about/, undefined, undefined, onBeforeEnter);
+
+        await sleep(100);
+        contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
+
+        aboutEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
+
+        expect(onEnter).toHaveBeenCalled();
+        expect(onLeave).toHaveBeenCalled();
+        expect(onBeforeEnter).toHaveBeenCalled();
+    });
+
+    it("expected hooks should be called at certain clicks", async () => {
+        await sleep(100);
+        const router = Router();
+        router.on("/", onEnter);
+        router.on((path) => path === "/contacts", onEnter, onLeave);
+        router.on(/\/about/, onEnter, onLeave, onBeforeEnter);
+
+        console.log(location.pathname);
+        await sleep(100);
+
+        contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
+
+        // expect(onEnter).toHaveBeenCalledTimes(7);
+
+        expect(onEnter).lastCalledWith({
+            currentPath: "/contacts",
+            previousPath: null,
+            state: 0.123
+        });
+
+        homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
+        await sleep();
+        // expect(onEnter).toHaveBeenCalledTimes(2);
+        // expect(onLeave).toHaveBeenCalledTimes(1);
+
+        expect(onEnter).lastCalledWith({
+            currentPath: "/",
+            previousPath: "/contacts",
+            state: 0.123
+        });
+
         expect(onLeave).lastCalledWith({
             currentPath: "/",
+            previousPath: "/contacts",
+            state: 0.123
+        });
+        aboutEl?.dispatchEvent(new Event("click", { bubbles: true }));
+        await sleep();
+
+        // expect(onBeforeEnter).toHaveBeenCalledTimes(1);
+
+        expect(onBeforeEnter).lastCalledWith({
+            currentPath: "/about",
             previousPath: "/",
-            state: 0.123,
+            state: 0.123
         });
     });
 });
