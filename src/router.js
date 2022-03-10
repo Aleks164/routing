@@ -10,7 +10,6 @@ export function Router(config) {
         (typeof match === "string" && match === path);
 
     const handleListener = async ({ match, onEnter, onLeave, onBeforeEnter }) => {
-        // console.log("____________handleListener", typeof onEnter)
         const args = { currentPath, previousPath, state: history.state };
         if (currentPath !== previousPath || args.state === null) {
             if (isMatch(match, currentPath)) {
@@ -21,17 +20,6 @@ export function Router(config) {
                 await onLeave?.(args);
             }
         }
-
-        // if (currentPath !== previousPath && Boolean(onBeforeEnter)) {
-        //     isMatch(match, currentPath) &&
-        //         (await onBeforeEnter(args).then(async () => {
-        //             isMatch(match, currentPath) && (await onEnter(args));
-        //             onLeave && isMatch(match, previousPath) && (await onLeave(args));
-        //         }));
-        // } else if (currentPath !== previousPath || args.state === null) {
-        //     isMatch(match, currentPath) && (await onEnter(args));
-        //     onLeave && isMatch(match, previousPath) && (await onLeave(args));
-        // }
     };
 
     const handleAllListeners = () => {
@@ -39,7 +27,6 @@ export function Router(config) {
         const chain = () => {
             const currentToDo = promList.shift();
             if (currentToDo) {
-                // console.log("____________chain", typeof currentToDo)
                 handleListener(currentToDo).catch((e) => console.error(e));
             }
         };
@@ -66,7 +53,6 @@ export function Router(config) {
         const listener = { id, match, onEnter, onLeave, onBeforeEnter };
         listeners.push(listener);
         handleListener(listener);
-        // console.log("____________on", typeof onEnter)
         return () => {
             listeners = listeners.filter((el) => el.id !== id);
         };
@@ -74,7 +60,6 @@ export function Router(config) {
 
     const go = (url, state) => {
         if (config && config.apiHashOn) {
-            // console.log("config", config);
             location.hash = url;
         } else {
             history.pushState(state, url, url);
@@ -84,7 +69,11 @@ export function Router(config) {
         handleAllListeners();
     };
 
-    window.addEventListener("popstate", handleAllListeners);
+    window.addEventListener("popstate", () => {
+        previousPath = currentPath;
+        currentPath = location.pathname;
+        handleAllListeners();
+    });
 
     document.body.addEventListener("click", (event) => {
         if (!event.target.matches("a")) {

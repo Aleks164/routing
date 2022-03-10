@@ -1,4 +1,4 @@
-.route{
+.routeMessage{
     box-sizing: border-box;
     padding: 15px;
     border: 2px solid;
@@ -11,4 +11,15 @@
 }
 #root{
     text-decoration: underline;
+}
+.onLeaveMessage{
+    box-sizing: border-box;
+    padding: 15px;
+    border: 2px solid;
+    height: 90px;
+    width: 220px;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    background-color: antiquewhite;
 }
