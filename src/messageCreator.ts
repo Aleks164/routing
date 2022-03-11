@@ -1,5 +1,9 @@
-export function messageCreator(content, sec, onLeave) {
-  if (!onLeave) {
+export function messageCreator(
+  content: string,
+  sec: number,
+  isItonLeave: boolean
+) {
+  if (!isItonLeave) {
     const routeInfoWindow = document.createElement("div");
     routeInfoWindow.classList.add("routeMessage");
     const windowMessage = document.createElement("p");
@@ -11,8 +15,7 @@ export function messageCreator(content, sec, onLeave) {
     setTimeout(() => {
       document.body.removeChild(routeInfoWindow);
     }, sec);
-  }
-  else {
+  } else {
     const routeInfoWindow = document.createElement("div");
     routeInfoWindow.classList.add("onLeaveMessage");
     const windowMessage = document.createElement("p");

@@ -24,8 +24,9 @@ router.on(
   createAsincRender("you have left /about", 1500, true), // onLeave
   createAsincRender("you going to /about", 1500) // onBeforeEnter
 );
-router.on(/\/about\/us/, createAsincRender("you switched to /about/us", 1500),
+router.on(
+  /\/about\/us/,
+  createAsincRender("you switched to /about/us", 1500),
   createAsincRender("you have left /about/us", 1500, true), // onLeave
   createAsincRender("you going to /about/us", 1500) // onBeforeEnter
 );
-
