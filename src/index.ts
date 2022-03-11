@@ -4,7 +4,7 @@ import { Router } from "./router";
 import "./index.css";
 
 const router = Router();
-
+console.log("check")
 router.on(
   "/",
   createAsincRender("you switched to Home ('/')", 1500), // onEnter
