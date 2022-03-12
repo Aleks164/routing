@@ -1,5 +1,8 @@
-/* eslint-disable no-unused-expressions */
-import { Args } from "./createAsincRender";
+type Args = {
+  state: unknown;
+  currentPath: string;
+  previousPath: string;
+};
 
 type Config = {
   apiHashOn: boolean;

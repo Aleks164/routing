@@ -10,7 +10,7 @@ module.exports = {
   entry: path.resolve(__dirname, "src/index.ts"),
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "router.js",
     clean: true,
     environment: {
       arrowFunction: false,

@@ -2,9 +2,11 @@
   "name": "routing",
   "version": "1.0.0",
   "description": "Development of a client routing library",
-  "main": "index.js",
+  "main": "dist/router.js",
+  "module": "dist/router.js",
+  "prepublish": "npm run build && npm run test",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
     "lint": "prettier --check . && eslint . --ext .js,.ts && tsc --noEmit && stylelint \"**/*.css\"",
     "lint:fix": "prettier --write . && eslint . --fix --ext .js,.ts && stylelint \"**/*.css\" --fix",
     "prepare": "husky install",
@@ -65,10 +67,10 @@
   "lint-staged": {
     "*.js,*.ts": [
       "prettier --write",
-      "eslint --cache --fix --ext .js,.ts"
+      "eslint --cache --fix --ext .js,.ts",
+      "webpack build --node-env production && jest"
     ],
-    "*.{css,md,yml}": "prettier --write",
-    "*.css": "stylelint --fix",
+    "*.{md,yml}": "prettier --write",
     "*.{js,ts}": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
   }
