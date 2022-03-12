@@ -1,8 +1,9 @@
 # routing
 
-Разработка библиотеки клиенсткого роутинга
-конфигурация роутов должна поддерживаться через функции/строки/регулярки
-поддержка передачи параметров в хуки роутера
-реализация поддержки асинхронных onBeforeEnter, onEnter, onLeave
-настройка для работы с hash/history api
-публикация пакета
+Client Routing Library:
++configuration of routes is supported via functions/strings/regular expressions;
++support for transferring parameters to router hooks;
++support for asynchronous on Before Enter, onEnter, onLeave functions;
++working with hash/history api.
+
+The library was created as part of a training project and the risks of its use remain with the user
