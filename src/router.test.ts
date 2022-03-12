@@ -75,7 +75,7 @@ describe("router", () => {
     expect(onEnter).lastCalledWith({
       currentPath: "/contacts",
       previousPath: "/",
-      state: 0.123
+      state: 0.123,
     });
   });
 
@@ -111,7 +111,7 @@ describe("router", () => {
     expect(onEnter).lastCalledWith({
       currentPath: "/contacts",
       previousPath: "/",
-      state: 0.123
+      state: 0.123,
     });
 
     homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
@@ -120,13 +120,13 @@ describe("router", () => {
     expect(onEnter).lastCalledWith({
       currentPath: "/",
       previousPath: "/contacts",
-      state: 0.123
+      state: 0.123,
     });
 
     expect(onLeave).lastCalledWith({
       currentPath: "/",
       previousPath: "/contacts",
-      state: 0.123
+      state: 0.123,
     });
     aboutEl?.dispatchEvent(new Event("click", { bubbles: true }));
     await sleep();
@@ -134,7 +134,7 @@ describe("router", () => {
     expect(onBeforeEnter).lastCalledWith({
       currentPath: "/about",
       previousPath: "/",
-      state: 0.123
+      state: 0.123,
     });
   });
 });

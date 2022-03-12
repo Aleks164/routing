@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 import { createAsincRender } from "./createAsincRender";
 
 describe("createAsincRender", () => {
@@ -14,11 +15,11 @@ describe("createAsincRender", () => {
   });
 
   it("createAsincRender is work", async () => {
-    let firstCall = createAsincRender("test", 50);
+    const firstCall = createAsincRender("test", 50);
     firstCall({
       state: "123",
       currentPath: "currentPath",
-      previousPath: "previousPath"
+      previousPath: "previousPath",
     });
 
     expect(document.getElementById("root").innerHTML).toBe(
