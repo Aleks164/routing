@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const path = require("path");
 
 const { NODE_ENV } = process.env;
 
 module.exports = {
-  entry: path.resolve(__dirname, "src/index.ts"),
+  entry: path.resolve(__dirname, "src/router.ts"),
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "router.js",
@@ -32,33 +29,10 @@ module.exports = {
           },
         },
       },
-      {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
-        generator: {
-          filename: "./image/[contenthash][ext]",
-        },
-      },
-      {
-        test: /\.html$/i,
-        loader: "html-loader",
-      },
     ],
   },
   mode: NODE_ENV === "production" ? "production" : "development",
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src/index.html"),
-    }),
-    new MiniCssExtractPlugin(),
-  ],
-  optimization: {
-    minimizer: [`...`, new CssMinimizerPlugin()],
-  },
+
   devServer: {
     compress: true,
     port: 9000,
