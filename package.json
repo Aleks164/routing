@@ -71,7 +71,7 @@
       "webpack build --node-env production && jest"
     ],
     "*.{md,yml}": "prettier --write",
-    "*.{js,ts}": "eslint --cache --fix",
+    "*.{js,ts}": "eslint --cache --fix && jest",
     "*.{js,css,md}": "prettier --write"
   }
 }
