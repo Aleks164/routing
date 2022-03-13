@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Client-Side URL</title>
+  </head>
+
+  <body>
+    <h1>Client-side URL</h1>
+    <nav style="display: flex; justify-content: space-around">
+      <a href="/">Home</a>
+      <a href="/contacts">Contacts</a>
+      <a href="/about">About</a>
+      <a href="/about/us">About / Us</a>
+    </nav>
+
+    <article id="root"></article>
+    <div id="windowPath"></div>
+    <script>
+      /* show when the page has been reloaded*/
+      window.addEventListener("load", () =>
+        console.log(`PAGE FULLY RELOADED ${Date.now()}`)
+      );
+    </script>
+  </body>
+</html>
