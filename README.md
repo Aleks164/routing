@@ -7,3 +7,5 @@ Client Routing Library:
 +working with hash/history api.
 
 The library was created as part of a training project and the risks of its use remain with the user
+
+https://www.npmjs.com/package/routing_al_164

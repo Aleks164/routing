@@ -1,5 +1,5 @@
 {
-  "name": "routing",
+  "name": "routing_al_164",
   "version": "1.0.0",
   "description": "Development of a client routing library",
   "main": "dist/router.js",
