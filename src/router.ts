@@ -17,7 +17,7 @@ type Listener = {
   onEnter: SecondCallRenderFunc;
   onLeave: SecondCallRenderFunc;
   onBeforeEnter: SecondCallRenderFunc;
-}
+};
 
 export function Router(config?: Config) {
   let listeners: Listener[] = [];
@@ -29,7 +29,12 @@ export function Router(config?: Config) {
     (typeof match === "function" && match(path)) ||
     (typeof match === "string" && match === path);
 
-  const handleListener = async ({ match, onEnter, onLeave, onBeforeEnter }: Listener) => {
+  const handleListener = async ({
+    match,
+    onEnter,
+    onLeave,
+    onBeforeEnter,
+  }: Listener) => {
     const args = { currentPath, previousPath, state: history.state };
     if (currentPath !== previousPath || args.state === null) {
       if (isMatch(match, currentPath)) {
@@ -58,8 +63,7 @@ export function Router(config?: Config) {
   const generateId = () => {
     const getRandomNumber = () =>
       Math.floor(Math.random() * listeners.length * 1000);
-    const doesExist = (id: number) =>
-      listeners.find((item) => item.id === id);
+    const doesExist = (id: number) => listeners.find((item) => item.id === id);
 
     let id = getRandomNumber();
     while (doesExist(id)) {

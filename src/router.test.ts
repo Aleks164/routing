@@ -58,14 +58,24 @@ describe("router", () => {
 
   it("routerOn is a function", () => {
     const router = Router();
-    const routerOn = router.on("/", undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc);
+    const routerOn = router.on(
+      "/",
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc
+    );
     expect(routerOn).toBeInstanceOf(Function);
   });
 
   it("should invoke expected hooks on contacts click with onEnter", async () => {
     const router = Router();
 
-    router.on((path) => path === "/contacts", onEnter, undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc);
+    router.on(
+      (path) => path === "/contacts",
+      onEnter,
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc
+    );
 
     await sleep();
     homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
@@ -81,8 +91,18 @@ describe("router", () => {
 
   it("should invoke expected hooks with hashApi", async () => {
     const router = Router({ apiHashOn: true });
-    router.on((path) => path === "/contacts", onEnter, onLeave, undefined as unknown as SecondCallRenderFunc);
-    router.on(/\/about/, undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc, onBeforeEnter);
+    router.on(
+      (path) => path === "/contacts",
+      onEnter,
+      onLeave,
+      undefined as unknown as SecondCallRenderFunc
+    );
+    router.on(
+      /\/about/,
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc,
+      onBeforeEnter
+    );
 
     await sleep();
     contactsEl?.dispatchEvent(new Event("click", { bubbles: true }));
@@ -98,9 +118,24 @@ describe("router", () => {
 
   it("expected hooks should be called at certain clicks", async () => {
     const router = Router();
-    router.on("/", onEnter, undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc);
-    router.on((path) => path === "/contacts", onEnter, onLeave, undefined as unknown as SecondCallRenderFunc);
-    router.on(/\/about/, undefined as unknown as SecondCallRenderFunc, undefined as unknown as SecondCallRenderFunc, onBeforeEnter);
+    router.on(
+      "/",
+      onEnter,
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc
+    );
+    router.on(
+      (path) => path === "/contacts",
+      onEnter,
+      onLeave,
+      undefined as unknown as SecondCallRenderFunc
+    );
+    router.on(
+      /\/about/,
+      undefined as unknown as SecondCallRenderFunc,
+      undefined as unknown as SecondCallRenderFunc,
+      onBeforeEnter
+    );
 
     homeEl?.dispatchEvent(new Event("click", { bubbles: true }));
     await sleep();
