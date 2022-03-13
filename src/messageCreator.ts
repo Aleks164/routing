@@ -1,7 +1,7 @@
 export function messageCreator(
   content: string,
   sec: number,
-  isItonLeave: boolean
+  isItonLeave: boolean | undefined
 ) {
   if (!isItonLeave) {
     const routeInfoWindow = document.createElement("div");

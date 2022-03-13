@@ -2,7 +2,7 @@
 import { createAsincRender } from "./createAsincRender";
 
 describe("createAsincRender", () => {
-  function sleep(ms) {
+  function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   beforeEach(() => {
@@ -22,20 +22,20 @@ describe("createAsincRender", () => {
       previousPath: "previousPath",
     });
 
-    expect(document.getElementById("root").innerHTML).toBe(
+    expect(document.getElementById("root")?.innerHTML).toBe(
       `<h2>Loading state...</h2>`
     );
-    expect(document.querySelector(".routeMessage").innerHTML).toBe(
+    expect(document.querySelector(".routeMessage")?.innerHTML).toBe(
       "<p>test</p><hr>"
     );
 
     await sleep(100);
 
     expect(document.querySelector(".routeMessage")).toBeNull();
-    expect(document.getElementById("root").innerHTML).toBe(
+    expect(document.getElementById("root")?.innerHTML).toBe(
       `<h2>state: 123</h2>`
     );
-    expect(document.getElementById("windowPath").innerHTML).toBe(
+    expect(document.getElementById("windowPath")?.innerHTML).toBe(
       "<h2>currentPath: currentPath</h2><h2>previousPath: previousPath</h2>"
     );
   });

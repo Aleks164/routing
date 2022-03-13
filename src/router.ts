@@ -4,23 +4,32 @@ import { Args } from "./createAsincRender";
 type Config = {
   apiHashOn: boolean;
 };
+
 type MatchFunction = (path: string) => void;
 
 type Match = RegExp | MatchFunction | string;
 
-type secondCallRenderFunc = (...args: Args[]) => Promise<unknown>;
+export type SecondCallRenderFunc = (...args: Args[]) => Promise<unknown>;
+
+type Listener = {
+  id: number;
+  match: Match;
+  onEnter: SecondCallRenderFunc;
+  onLeave: SecondCallRenderFunc;
+  onBeforeEnter: SecondCallRenderFunc;
+}
 
 export function Router(config?: Config) {
-  let listeners = [];
+  let listeners: Listener[] = [];
   let currentPath = location.pathname;
-  let previousPath = null;
+  let previousPath = "";
 
   const isMatch = (match: Match, path: string) =>
     (match instanceof RegExp && match.test(path)) ||
     (typeof match === "function" && match(path)) ||
     (typeof match === "string" && match === path);
 
-  const handleListener = async ({ match, onEnter, onLeave, onBeforeEnter }) => {
+  const handleListener = async ({ match, onEnter, onLeave, onBeforeEnter }: Listener) => {
     const args = { currentPath, previousPath, state: history.state };
     if (currentPath !== previousPath || args.state === null) {
       if (isMatch(match, currentPath)) {
@@ -50,7 +59,7 @@ export function Router(config?: Config) {
     const getRandomNumber = () =>
       Math.floor(Math.random() * listeners.length * 1000);
     const doesExist = (id: number) =>
-      listeners.find((listener) => listener.id === id);
+      listeners.find((item) => item.id === id);
 
     let id = getRandomNumber();
     while (doesExist(id)) {
@@ -61,12 +70,12 @@ export function Router(config?: Config) {
 
   const on = (
     match: Match,
-    onEnter: secondCallRenderFunc,
-    onLeave: secondCallRenderFunc,
-    onBeforeEnter: secondCallRenderFunc
+    onEnter: SecondCallRenderFunc,
+    onLeave: SecondCallRenderFunc,
+    onBeforeEnter: SecondCallRenderFunc
   ) => {
     const id = generateId();
-    const listener = { id, match, onEnter, onLeave, onBeforeEnter };
+    const listener: Listener = { id, match, onEnter, onLeave, onBeforeEnter };
     listeners.push(listener);
     handleListener(listener);
     return () => {
@@ -100,7 +109,9 @@ export function Router(config?: Config) {
     const url = (event.target as HTMLAreaElement).getAttribute("href");
 
     const random = Math.random();
-    go(url, random);
+    if (url && typeof url === "string") {
+      go(url, random);
+    }
   });
 
   return { on };
